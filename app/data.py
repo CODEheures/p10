@@ -19,6 +19,7 @@ import albumentations as A
 import imgaug
 from rectangle import Rectangle
 import matplotlib.patches as patches
+import wget
 
 class Data():
 
@@ -33,12 +34,17 @@ class Data():
             self.get_dfs()
 
     def unzip(self):
-        with zipfile.ZipFile(Config.DATA_ZIP, 'r') as zf:
-            for member in tqdm(zf.infolist(), desc='Extraction '):
-                try:
-                    zf.extract(member)
-                except zipfile.error as e:
-                    pass
+        print('Téléchargement des data')
+        file_zip = wget.download(Config.DATA_ZIP_URL)
+        
+        print('Extraction des data')
+        with zipfile.ZipFile(file_zip, 'r') as zf:
+                for member in tqdm(zf.infolist(), desc='Extraction '):
+                    try:
+                        zf.extract(member)
+                    except zipfile.error as e:
+                        pass
+        os.remove(file_zip)
 
     def createYaml(self):
         lines = [f'path: {os.path.join(Config.ORIGINAL_DATA_DIR)}']

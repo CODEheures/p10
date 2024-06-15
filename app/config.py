@@ -1,5 +1,7 @@
+import numpy as np
+
 class Config():
-    DATA_ZIP = 'drive/MyDrive/Ingenieur IA/Openclassrooms/P10/data.zip'
+    DATA_ZIP = 'https://codeheurespublic.s3.eu-west-3.amazonaws.com/ships.zip'
     ORIGINAL_DATA_DIR = 'ships-aerial-images'
     PREPARED_DATA_DIR = 'datasets'
     BATCH_SIZE = 16
