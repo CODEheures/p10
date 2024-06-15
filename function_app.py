@@ -1,25 +1,22 @@
 import azure.functions as func
 import logging
+from app.data import Data
+import json
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
+env = Environment(
+    loader=FileSystemLoader("templates"),
+    autoescape=select_autoescape()
+)
 
-@app.route(route="dashboard")
-def dashboard(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
-
-    name = req.params.get('name')
-    if not name:
-        try:
-            req_body = req.get_json()
-        except ValueError:
-            pass
-        else:
-            name = req_body.get('name')
-
-    if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
-    else:
-        return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
-        )
+@app.route(route="/", methods=["GET"])
+def home(req: func.HttpRequest) -> func.HttpResponse:
+    """Route pour afficher le dashboard
+    """
+    template = env.get_template("home.html")
+    html = template.render(users=['titi', 'tata'])
+    return func.HttpResponse(
+                        html,
+                        mimetype="text/html",
+                 )

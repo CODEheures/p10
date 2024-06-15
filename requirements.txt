@@ -3,3 +3,13 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
+pandas
+numpy
+matplotlib
+scikit-learn
+scikit-surprise
+pandarallel
+Jinja2
+
+# Only for local notebook, not for azure function
+# ipywidgets
