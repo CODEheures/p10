@@ -7,9 +7,15 @@ pandas
 numpy
 matplotlib
 scikit-learn
-scikit-surprise
-pandarallel
+seaborn
+pillow
 Jinja2
+tqdm
+tabulate
+imgaug
+albumentations==1.4.8
+ultralytics
+comet_ml
 
 # Only for local notebook, not for azure function
 # ipywidgets
