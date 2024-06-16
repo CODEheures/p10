@@ -446,9 +446,9 @@ class Data():
         for i in range(nb_images):
             if type(axis) is np.ndarray:
                 if rows > 1:
-                    current_axis = axis[i,j]
+                    current_axis = axis[i]
                 else:
-                    current_axis = axis[j]
+                    current_axis = axis[0]
             else:
                 current_axis = axis
 
