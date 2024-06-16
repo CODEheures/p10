@@ -16,7 +16,7 @@ imgaug==0.4.0
 albumentations==1.4.8
 ultralytics==8.2.32
 comet-ml==3.43.1
-wget==3.2
+pyarrow==14.0.2
 
 # Only for local notebook, not for azure function
 # ipywidgets

@@ -28,7 +28,7 @@ from app.message import Message
 
 class Data():
 
-    def __init__(self, force_extract=False, mode='notebook'):
+    def __init__(self, force_extract=False, force_dfs=False, mode='notebook'):
         self.mode = mode
         self.message = Message(mode)
         self.df_images_path = 'images.parquet'
@@ -37,14 +37,18 @@ class Data():
         self.df_images: pd.DataFrame = None
         self.df_boxes: pd.DataFrame = None
 
+        sns.set_theme()
         if mode != 'notebook':
             sns.set_context("talk")
             sns.set_palette('colorblind')
 
-        if force_extract or not os.path.exists(Config.ORIGINAL_DATA_DIR):
+        if force_extract:
             self.clean_data() 
+
+        if not os.path.exists(Config.ORIGINAL_DATA_DIR):
             self.unzip()
-            self.get_dfs()
+        
+        self.get_dfs(load_if_exist=False if force_dfs else True)
 
     def clean_data(self):
         for dir in [Config.ORIGINAL_DATA_DIR, Config.PREPARED_DATA_DIR]:

@@ -13,14 +13,17 @@ env = Environment(
 def update_data(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour preparer les data
     """
-    Data(force_extract=True, mode='html')
+    force_extract = req.params.get('force_extract') == 'true'
+    force_dfs = req.params.get('force_dfs') == 'true'
+
+    Data(force_dfs=force_dfs, force_extract=force_extract, mode='html')
     return func.HttpResponse(
                         "Ok",
                         mimetype="text/html",
                  )
 
-@app.route(route="/", methods=["GET"])
-def home(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="/dashboard", methods=["GET"])
+def dashboard(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher le dashboard
     """
     data = Data(mode='html')
@@ -32,8 +35,8 @@ def home(req: func.HttpRequest) -> func.HttpResponse:
                          steps=[Steps.TRAIN, Steps.VALID])
     
 
-    template = env.get_template("home.html")
-    html = template.render(users=['titi', 'tata'], hist1=hist1)
+    template = env.get_template("dashboard.html")
+    html = template.render(hist1=hist1)
 
     return func.HttpResponse(
                         html,
