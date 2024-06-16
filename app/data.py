@@ -17,17 +17,20 @@ import imgaug
 import matplotlib.patches as patches
 import wget
 import base64
+import requests
 from io import BytesIO
 
 from app.config import Config
 from app.steps import Steps
 from app.dfs import Dfs
 from app.rectangle import Rectangle
+from app.message import Message
 
 class Data():
 
     def __init__(self, force_extract=False, mode='notebook'):
         self.mode = mode
+        self.message = Message(mode)
         self.df_images_path = 'images.parquet'
         self.df_boxes_path = 'boxes.parquet'
         self.dataset_yaml = 'dataset.yaml'
@@ -50,17 +53,31 @@ class Data():
         for file in [self.df_images_path, self.df_boxes_path, self.dataset_yaml]:
             if os.path.exists(file):
                 os.remove(file)
+
+    def download_file(self, url):
+        local_filename = url.split('/')[-1]
+        # NOTE the stream=True parameter below
+        with requests.get(url, stream=True) as r:
+            r.raise_for_status()
+            with open(local_filename, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=8192): 
+                    # If you have chunk encoded response uncomment if
+                    # and set chunk_size parameter to None.
+                    #if chunk: 
+                    f.write(chunk)
+        return local_filename
             
     def unzip(self):
-        print('Téléchargement des data')
-        file_zip = wget.download(Config.DATA_ZIP_URL)
+        self.message.print('Téléchargement des data')
+        file_zip = self.download_file(Config.DATA_ZIP_URL)
         
-        print('Extraction des data')
+        self.message.print('Extraction des data')
         with zipfile.ZipFile(file_zip, 'r') as zf:
-                for member in tqdm(zf.infolist(), desc='Extraction '):
+                for member in (tqdm(zf.infolist(), desc='Extraction ') if self.mode == 'notebook' else zf.infolist()):
                     try:
                         zf.extract(member)
                     except zipfile.error as e:
+                        self.message.print(e)
                         pass
         os.remove(file_zip)
 
@@ -78,12 +95,12 @@ class Data():
             f.close()
 
     def prepare_data(self, min_size = Config.BATCH_IMAGE_SIZE):
-        print(f'Préparation du dataset')
+        self.message.print(f'Préparation du dataset')
         self.createYaml()
 
         dest = os.path.join(Config.PREPARED_DATA_DIR, Config.ORIGINAL_DATA_DIR)
 
-        print(f'Copie des fichiers originaux')
+        self.message.print(f'Copie des fichiers originaux')
         Path(dest).mkdir(parents=True, exist_ok=True)
         shutil.copytree(Config.ORIGINAL_DATA_DIR, dest, dirs_exist_ok=True)
         os.remove(os.path.join(dest, 'data.yaml'))
@@ -100,7 +117,7 @@ class Data():
             len_images_before = len(os.listdir(images_destination))
             authorizes_indexes = dfs['images']['index'].to_list()
 
-            for i in tqdm(range(len(images)), desc=f"Filtrage des images et labels {step}"):
+            for i in (tqdm(range(len(images)), desc=f"Filtrage des images et labels {step}") if self.mode == 'notebook' else range(len(images))):
                 index = images[i][:-4]
                 if not index in authorizes_indexes:
                     image_path = os.path.join(images_destination, images[i])
@@ -111,9 +128,9 @@ class Data():
             len_images_after = len(os.listdir(images_destination))
             table.append([step, len_images_before, len_images_after])
 
-        print('')
-        print('Nombre d\'images avant et après filtrage:')
-        print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
+        self.message.print('')
+        self.message.print('Nombre d\'images avant et après filtrage:')
+        self.message.print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
 
     def get_dfs(self, load_if_exist=True, filter_valid = False, filter_min_size = None, step = None) -> Dfs:
         if load_if_exist and (self.df_images is not None) and (self.df_boxes is not None):
@@ -130,7 +147,7 @@ class Data():
             max_cell_size = max([Config.LARGEUR_CELLULE, Config.HAUTEUR_CELLULE])
 
             for step in Steps.ALL:
-                print(f'Traitement du dataset {step}')
+                self.message.print(f'Traitement du dataset {step}')
 
                 images_dir = Config.ORIGINAL_DATA_DIR + '/' + step + '/images/'
                 labels_dir = Config.ORIGINAL_DATA_DIR + '/' + step + '/labels/'
@@ -141,7 +158,7 @@ class Data():
                 total_invalid_boxes = 0
                 total_boxes = 0
 
-                for i in tqdm(range(len(images))):
+                for i in (tqdm(range(len(images))) if self.mode == 'notebook' else range(len(images))):
                     # Images = Label?
                     assert images[i][:-3] == labels[i][:-3], f'step: {step}\n images: {images[i]}\n label: {labels[i]}'
                     index = images[i][:-4]
@@ -191,7 +208,7 @@ class Data():
 
                     infos['images'].append([index, image_path, width, height, math.ceil(width*1000/height)/1000, mode, max(nb_in_same_cell), step, 1 if nb_invalid == 0 else 0])
 
-                print(f'{total_boxes} boxes dont {total_invalid_boxes} invalides')
+                self.message.print(f'{total_boxes} boxes dont {total_invalid_boxes} invalides')
 
             self.df_images = pd.DataFrame(infos['images'], columns=['index', 'path', 'width', 'height', 'ratio', 'mode', 'box_in_same_cell', 'step', 'valid'])
             self.df_boxes = pd.DataFrame(infos['boxes'], columns=['index', 'path', 'class', 'x', 'y', 'width', 'height', 'surface', 'max_box_in_same_cell', 'step', 'valid'])
@@ -391,7 +408,7 @@ class Data():
     def display_image(self, index, with_boxes=True, crop=Config.BATCH_IMAGE_SIZE, ax = None, print_target=False, seed=None):
         [image, yolo_boxes, target, table] = self.get(index=index, crop=crop, seed=seed)
         if print_target:
-            print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
+            self.message.print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
         if with_boxes:
             self.draw_image(image=image, yolo_boxes=yolo_boxes, ax=ax)
         else:
@@ -432,7 +449,7 @@ class Data():
             indexes = sample['index'].to_list()
         else:
             nb_images = len(indexes)
-        print(indexes)
+        self.message.print(indexes)
 
         cols = 1
         rows = nb_images

@@ -6,3 +6,11 @@ __queuestorage__
 local.settings.json
 test
 .venv
+
+# data
+*.tmp
+data.zip
+ships-aerial-images/
+datasets/
+*.parquet
+dataset.yaml

@@ -3,20 +3,20 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
-pandas
-numpy
-matplotlib
-scikit-learn
-seaborn
-pillow
+pandas==2.0.3
+numpy==1.25.2
+matplotlib==3.7.1
+scikit-learn==1.5.0
+seaborn==0.13.1
+Pillow==9.4.0
 Jinja2
-tqdm
-tabulate
-imgaug
+tqdm==4.66.4
+tabulate==0.9.0
+imgaug==0.4.0
 albumentations==1.4.8
-ultralytics
-comet_ml
-wget
+ultralytics==8.2.32
+comet-ml==3.43.1
+wget==3.2
 
 # Only for local notebook, not for azure function
 # ipywidgets

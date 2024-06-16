@@ -135,5 +135,9 @@ __azurite_db*__.json
 .python_packages
 
 # data
-data/**/*.csv
-data/**/*.pickle
+*.tmp
+data.zip
+ships-aerial-images/
+datasets/
+*.parquet
+dataset.yaml
