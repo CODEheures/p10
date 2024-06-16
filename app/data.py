@@ -1,13 +1,10 @@
 import pandas as pd
 import os
-from config import Config
 import zipfile
 from tqdm import tqdm
-from steps import Steps
 from pathlib import Path
 import shutil
 from tabulate import tabulate
-from dfs import Dfs
 from PIL import Image
 import numpy as np
 from sklearn.metrics.pairwise import pairwise_distances
@@ -17,12 +14,15 @@ import seaborn as sns
 import random
 import albumentations as A
 import imgaug
-from rectangle import Rectangle
 import matplotlib.patches as patches
 import wget
 import base64
 from io import BytesIO
 
+from app.config import Config
+from app.steps import Steps
+from app.dfs import Dfs
+from app.rectangle import Rectangle
 
 class Data():
 
@@ -44,16 +44,12 @@ class Data():
             self.get_dfs()
 
     def clean_data(self):
-        if os.path.exists(Config.ORIGINAL_DATA_DIR):
-            Path(Config.ORIGINAL_DATA_DIR).rmdir()
-        if os.path.exists(Config.PREPARED_DATA_DIR):
-            Path(Config.PREPARED_DATA_DIR).rmdir()
-        if os.path.exists(self.df_images_path):
-            os.remove(self.df_images_path)
-        if os.path.exists(self.df_boxes_path):
-            os.remove(self.df_boxes_path)
-        if os.path.exists(self.dataset_yaml):
-            os.remove(self.dataset_yaml)
+        for dir in [Config.ORIGINAL_DATA_DIR, Config.PREPARED_DATA_DIR]:
+            if os.path.exists(dir):
+                shutil.rmtree(dir)
+        for file in [self.df_images_path, self.df_boxes_path, self.dataset_yaml]:
+            if os.path.exists(file):
+                os.remove(file)
             
     def unzip(self):
         print('Téléchargement des data')
