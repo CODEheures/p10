@@ -26,7 +26,7 @@ class Models():
             model = YOLO(f"{model_name}.yaml")
 
         # Train the model using the 'coco8.yaml' dataset for 3 epochs
-        results = model.train(data="dataset.yaml", epochs=epochs, batch=Config.BATCH_SIZE, imgsz=Config.BATCH_IMAGE_SIZE, pretrained=pretrained, fraction=fraction)
+        results = model.train(data=self.data.dataset_yaml, epochs=epochs, batch=Config.BATCH_SIZE, imgsz=Config.BATCH_IMAGE_SIZE, pretrained=pretrained, fraction=fraction)
 
     def predict(self, index, model='yolov3n', version='1.0.0'):
         [image, bboxes, _, _] = self.data.get(index=index, seed=0)

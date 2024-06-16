@@ -20,19 +20,41 @@ import imgaug
 from rectangle import Rectangle
 import matplotlib.patches as patches
 import wget
+import base64
+from io import BytesIO
+
 
 class Data():
 
-    def __init__(self, stats=True):
+    def __init__(self, force_extract=False, mode='notebook'):
+        self.mode = mode
         self.df_images_path = 'images.parquet'
         self.df_boxes_path = 'boxes.parquet'
+        self.dataset_yaml = 'dataset.yaml'
         self.df_images: pd.DataFrame = None
         self.df_boxes: pd.DataFrame = None
 
-        if not os.path.exists(Config.ORIGINAL_DATA_DIR):
+        if mode != 'notebook':
+            sns.set_context("talk")
+            sns.set_palette('colorblind')
+
+        if force_extract or not os.path.exists(Config.ORIGINAL_DATA_DIR):
+            self.clean_data() 
             self.unzip()
             self.get_dfs()
 
+    def clean_data(self):
+        if os.path.exists(Config.ORIGINAL_DATA_DIR):
+            Path(Config.ORIGINAL_DATA_DIR).rmdir()
+        if os.path.exists(Config.PREPARED_DATA_DIR):
+            Path(Config.PREPARED_DATA_DIR).rmdir()
+        if os.path.exists(self.df_images_path):
+            os.remove(self.df_images_path)
+        if os.path.exists(self.df_boxes_path):
+            os.remove(self.df_boxes_path)
+        if os.path.exists(self.dataset_yaml):
+            os.remove(self.dataset_yaml)
+            
     def unzip(self):
         print('Téléchargement des data')
         file_zip = wget.download(Config.DATA_ZIP_URL)
@@ -55,7 +77,7 @@ class Data():
         lines.append(f'nc: {len(Config.CLASSES)}')
         for class_name in Config.CLASSES:
             lines.append(f'names: [\'{class_name}\']')
-        with open('dataset.yaml', 'w') as f:
+        with open(self.dataset_yaml, 'w') as f:
             f.write('\n'.join(lines))
             f.close()
 
@@ -219,7 +241,13 @@ class Data():
             current_axis.set_ylabel(None)
         fig.supxlabel(x_label)
         fig.supylabel(y_label)
-        plt.show()
+
+        if self.mode == 'notebook':
+            plt.show()
+        else:
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def plot_values_by_step(self, df_name: str, x: str, title = '', x_label = '', y_label='', steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True)
@@ -235,7 +263,13 @@ class Data():
             current_axis.set_ylabel(None)
         fig.supxlabel(x_label)
         fig.supylabel(y_label)
-        plt.show()
+        
+        if self.mode == 'notebook':
+            plt.show()
+        else:
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def plot_pie_valid_boxes_by_step(self, steps=Steps.ALL):
         dfs = self.get_dfs()
@@ -250,7 +284,13 @@ class Data():
             current_axis.set_ylabel(None)
         fig.supxlabel(None)
         fig.supylabel(None)
-        plt.show()
+        
+        if self.mode == 'notebook':
+            plt.show()
+        else:
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def plot_count_boxes_per_images_by_step(self, steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True)
@@ -266,7 +306,13 @@ class Data():
             current_axis.set_ylabel(None)
         fig.supxlabel('Nombre de boites')
         fig.supylabel('Nombre d\'images')
-        plt.show()
+        
+        if self.mode == 'notebook':
+            plt.show()
+        else:
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def plot_box_in_same_cell(self, steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE)
@@ -284,7 +330,13 @@ class Data():
             current_axis.legend(['Nombre d\'images', 'Nombre d\'images cumulées'])
         fig.supxlabel('Nombre de boites')
         fig.supylabel('Nombre d\'images')
-        plt.show()
+        
+        if self.mode == 'notebook':
+            plt.show()
+        else:
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def get_indexes(self, step, min_size = Config.BATCH_IMAGE_SIZE):
         dfs = dfs = self.get_dfs(filter_valid=True, filter_min_size=min_size, step=step)
@@ -399,7 +451,14 @@ class Data():
                     current_axis = axis[j]
             else:
                 current_axis = axis
+
             self.display_image(index=indexes[i], with_boxes=with_boxes, ax=current_axis, print_target=print_target)
+            if self.mode == 'notebook':
+                plt.show()
+            else:
+                buf = BytesIO()
+                fig.savefig(buf, format="png")
+                return base64.b64encode(buf.getbuffer()).decode("ascii")
 
     def yolo_boxes_to_target(self, yolo_boxes):
         target = np.zeros((Config.GRID_X, Config.GRID_Y, len(Config.ANCHORS), 5 + len(Config.CLASSES)), dtype=np.float32)
