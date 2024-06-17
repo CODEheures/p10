@@ -9,24 +9,21 @@ env = Environment(
     autoescape=select_autoescape()
 )
 
-@app.route(route="/update_data", methods=["GET"])
-def update_data(req: func.HttpRequest) -> func.HttpResponse:
-    """Route pour preparer les data
-    """
-    force_extract = req.params.get('force_extract') == 'true'
-    force_dfs = req.params.get('force_dfs') == 'true'
-
-    Data(force_dfs=force_dfs, force_extract=force_extract, mode='html')
-    return func.HttpResponse(
-                        "Ok",
-                        mimetype="text/html",
-                 )
+data = Data(mode='html')
 
 @app.route(route="/dashboard", methods=["GET"])
 def dashboard(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher le dashboard
     """
-    data = Data(mode='html')
+    sample_seed = req.params.get('sample_seed')
+    if (sample_seed is None):
+        sample_seed = 0
+
+    samples = []
+    for i in range(5):
+        seed = 5*int(sample_seed)+i
+        samples.append(data.display_sample(nb_images=1, step=Steps.TEST, seed=seed))
+    
     hist1 = data.plot_values_by_step(df_name='images',
                          x='width',
                          title='Largeur des images',
@@ -36,7 +33,7 @@ def dashboard(req: func.HttpRequest) -> func.HttpResponse:
     
 
     template = env.get_template("dashboard.html")
-    html = template.render(hist1=hist1)
+    html = template.render(samples=samples, hist1=hist1)
 
     return func.HttpResponse(
                         html,

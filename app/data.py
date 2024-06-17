@@ -432,10 +432,10 @@ class Data():
             for i in range(Config.GRID_Y):
                 ax.hlines(image.shape[1]/Config.GRID_Y*i, 1, image.shape[0] - 1, colors=(1,1,1,0.15))
 
-    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False, step=None):
+    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False, step=None, figsize=(8,8), seed=0):
         if indexes is None:
             dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE, step=step)
-            sample = dfs['images'].sample(nb_images)
+            sample = dfs['images'].sample(nb_images, random_state=seed)
             indexes = sample['index'].to_list()
         else:
             nb_images = len(indexes)
@@ -444,7 +444,7 @@ class Data():
         cols = 1
         rows = nb_images
 
-        fig, axis = plt.subplots(rows, cols, figsize=(14,10), linewidth=0)
+        fig, axis = plt.subplots(rows, cols, figsize=figsize, linewidth=0)
 
         for i in range(nb_images):
             if type(axis) is np.ndarray:
