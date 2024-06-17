@@ -1,0 +1,7 @@
+path: ships-aerial-images
+train: train/images
+val: valid/images
+test: test/images
+
+nc: 1
+names: ['ship']

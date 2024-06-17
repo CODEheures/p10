@@ -9,8 +9,4 @@ test
 
 # data
 *.tmp
-data.zip
-ships-aerial-images/
-datasets/
-*.parquet
-dataset.yaml
+*.zip

@@ -17,7 +17,6 @@ import imgaug
 import matplotlib.patches as patches
 import wget
 import base64
-import requests
 from io import BytesIO
 
 from app.config import Config
@@ -48,7 +47,7 @@ class Data():
         if not os.path.exists(Config.ORIGINAL_DATA_DIR):
             self.unzip()
         
-        self.get_dfs(load_if_exist=False if force_dfs else True)
+        self.get_dfs(load_if_exist=False if (force_dfs or force_extract) else True)
 
     def clean_data(self):
         for dir in [Config.ORIGINAL_DATA_DIR, Config.PREPARED_DATA_DIR]:
@@ -58,22 +57,9 @@ class Data():
             if os.path.exists(file):
                 os.remove(file)
 
-    def download_file(self, url):
-        local_filename = url.split('/')[-1]
-        # NOTE the stream=True parameter below
-        with requests.get(url, stream=True) as r:
-            r.raise_for_status()
-            with open(local_filename, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192): 
-                    # If you have chunk encoded response uncomment if
-                    # and set chunk_size parameter to None.
-                    #if chunk: 
-                    f.write(chunk)
-        return local_filename
-            
     def unzip(self):
         self.message.print('Téléchargement des data')
-        file_zip = self.download_file(Config.DATA_ZIP_URL)
+        file_zip = wget.download(Config.DATA_ZIP_URL)
         
         self.message.print('Extraction des data')
         with zipfile.ZipFile(file_zip, 'r') as zf:
@@ -446,9 +432,9 @@ class Data():
             for i in range(Config.GRID_Y):
                 ax.hlines(image.shape[1]/Config.GRID_Y*i, 1, image.shape[0] - 1, colors=(1,1,1,0.15))
 
-    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False):
+    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False, step=None):
         if indexes is None:
-            dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE)
+            dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE, step=step)
             sample = dfs['images'].sample(nb_images)
             indexes = sample['index'].to_list()
         else:

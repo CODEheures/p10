@@ -136,8 +136,4 @@ __azurite_db*__.json
 
 # data
 *.tmp
-data.zip
-ships-aerial-images/
-datasets/
-*.parquet
-dataset.yaml
+*.zip
