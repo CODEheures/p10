@@ -250,7 +250,7 @@ class Data():
         else:
             buf = BytesIO()
             fig.savefig(buf, format="png")
-            return base64.b64encode(buf.getbuffer()).decode("ascii")
+            return buf.getbuffer().tobytes()
 
     def plot_values_by_step(self, df_name: str, x: str, title = '', x_label = '', y_label='', steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True)
@@ -272,7 +272,7 @@ class Data():
         else:
             buf = BytesIO()
             fig.savefig(buf, format="png")
-            return base64.b64encode(buf.getbuffer()).decode("ascii")
+            return buf.getbuffer().tobytes()
 
     def plot_pie_valid_boxes_by_step(self, steps=Steps.ALL):
         dfs = self.get_dfs()
@@ -293,7 +293,7 @@ class Data():
         else:
             buf = BytesIO()
             fig.savefig(buf, format="png")
-            return base64.b64encode(buf.getbuffer()).decode("ascii")
+            return buf.getbuffer().tobytes()
 
     def plot_count_boxes_per_images_by_step(self, steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True)
@@ -315,7 +315,7 @@ class Data():
         else:
             buf = BytesIO()
             fig.savefig(buf, format="png")
-            return base64.b64encode(buf.getbuffer()).decode("ascii")
+            return buf.getbuffer().tobytes()
 
     def plot_box_in_same_cell(self, steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE)
@@ -339,11 +339,19 @@ class Data():
         else:
             buf = BytesIO()
             fig.savefig(buf, format="png")
-            return base64.b64encode(buf.getbuffer()).decode("ascii")
+            return buf.getbuffer().tobytes()
 
-    def get_indexes(self, step, min_size = Config.BATCH_IMAGE_SIZE):
+    def get_indexes(self, step, min_size = Config.BATCH_IMAGE_SIZE, start = None, quantity = 1, roll=0):
         dfs = dfs = self.get_dfs(filter_valid=True, filter_min_size=min_size, step=step)
-        return dfs['images']['index'].to_list()
+        indexes = dfs['images']['index'].to_list()
+        
+        if roll > 0:
+            indexes = np.roll(np.array(indexes), roll).tolist()
+
+        if (start is not None):
+            return indexes[start:start+quantity]
+        else:
+            return indexes
 
     def get(self, index, crop=Config.BATCH_IMAGE_SIZE, seed = None):
         dfs = self.get_dfs()
@@ -432,7 +440,7 @@ class Data():
             for i in range(Config.GRID_Y):
                 ax.hlines(image.shape[1]/Config.GRID_Y*i, 1, image.shape[0] - 1, colors=(1,1,1,0.15))
 
-    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False, step=None, figsize=(8,8), seed=0):
+    def display_sample(self, indexes = None, with_boxes=True, nb_images=1, print_target=False, step=None, figsize=(8,8), seed=123):
         if indexes is None:
             dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE, step=step)
             sample = dfs['images'].sample(nb_images, random_state=seed)
@@ -455,13 +463,13 @@ class Data():
             else:
                 current_axis = axis
 
-            self.display_image(index=indexes[i], with_boxes=with_boxes, ax=current_axis, print_target=print_target)
+            self.display_image(index=indexes[i], with_boxes=with_boxes, ax=current_axis, print_target=print_target, seed=seed)
             if self.mode == 'notebook':
                 plt.show()
             else:
                 buf = BytesIO()
                 fig.savefig(buf, format="png")
-                return base64.b64encode(buf.getbuffer()).decode("ascii")
+                return buf.getbuffer().tobytes()
 
     def yolo_boxes_to_target(self, yolo_boxes):
         target = np.zeros((Config.GRID_X, Config.GRID_Y, len(Config.ANCHORS), 5 + len(Config.CLASSES)), dtype=np.float32)

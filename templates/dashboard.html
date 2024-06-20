@@ -1,299 +1,146 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
+{% extends "skeleton.html" %}
+{% block activeDashboard %}
+active
+{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Dashboard</h1>
+</div>
 
-    <title>Dashboard Template for Bootstrap</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/dashboard/">
-
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
-
-    <!-- Custom styles for this template -->
-    <style>
-        body {
-            font-size: .875rem;
-        }
-
-        .feather {
-            width: 16px;
-            height: 16px;
-            vertical-align: text-bottom;
-        }
-
-        /*
-        * Sidebar
-        */
-
-        .sidebar {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 100; /* Behind the navbar */
-            padding: 48px 0 0; /* Height of navbar */
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-        }
-
-        .sidebar-sticky {
-            position: relative;
-            top: 0;
-            height: calc(100vh - 48px);
-            padding-top: .5rem;
-            overflow-x: hidden;
-            overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-        }
-
-        @supports ((position: -webkit-sticky) or (position: sticky)) {
-            .sidebar-sticky {
-                position: -webkit-sticky;
-                position: sticky;
-            }
-        }
-
-        .sidebar .nav-link {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .sidebar .nav-link .feather {
-            margin-right: 4px;
-            color: #999;
-        }
-
-        .sidebar .nav-link.active {
-            color: #007bff;
-        }
-
-        .sidebar .nav-link:hover .feather,
-        .sidebar .nav-link.active .feather {
-            color: inherit;
-        }
-
-        .sidebar-heading {
-            font-size: .75rem;
-            text-transform: uppercase;
-        }
-
-        /*
-        * Content
-        */
-
-        [role="main"] {
-            padding-top: 48px; /* Space for fixed navbar */
-        }
-
-        /*
-        * Navbar
-        */
-
-        .navbar-brand {
-            padding-top: .75rem;
-            padding-bottom: .75rem;
-            font-size: 1rem;
-            background-color: rgba(0, 0, 0, .25);
-            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
-        }
-
-        .navbar .form-control {
-            padding: .75rem 1rem;
-            border-width: 0;
-            border-radius: 0;
-        }
-
-        .form-control-dark {
-            color: #fff;
-            background-color: rgba(255, 255, 255, .1);
-            border-color: rgba(255, 255, 255, .1);
-        }
-
-        .form-control-dark:focus {
-            border-color: transparent;
-            box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
-        }          
-    </style>
-  </head>
-
-  <body>
-    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
-      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-      <ul class="navbar-nav px-3">
-        <li class="nav-item text-nowrap">
-          <a class="nav-link" href="#">Sign out</a>
-        </li>
-      </ul>
-    </nav>
-
-    <div class="lightbox-gallery">
-      <div class="container-fluid">
-        <div class="row">
-          <nav class="col-md-2 d-none d-md-block bg-light sidebar">
-            <div class="sidebar-sticky">
-              <ul class="nav flex-column">
-                <li class="nav-item">
-                  <a class="nav-link active" href="#">
-                    <span data-feather="home"></span>
-                    Dashboard <span class="sr-only">(current)</span>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="file"></span>
-                    Orders
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="shopping-cart"></span>
-                    Products
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="users"></span>
-                    Customers
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="bar-chart-2"></span>
-                    Reports
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="layers"></span>
-                    Integrations
-                  </a>
-                </li>
-              </ul>
-  
-              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-                <span>Saved reports</span>
-                <a class="d-flex align-items-center text-muted" href="#">
-                  <span data-feather="plus-circle"></span>
-                </a>
-              </h6>
-              <ul class="nav flex-column mb-2">
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="file-text"></span>
-                    Current month
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="file-text"></span>
-                    Last quarter
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="file-text"></span>
-                    Social engagement
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span data-feather="file-text"></span>
-                    Year-end sale
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </nav>
-  
-          <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-              <h1 class="h2">Dashboard</h1>
-              <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                  <button class="btn btn-sm btn-outline-secondary">Share</button>
-                  <button class="btn btn-sm btn-outline-secondary">Export</button>
-                </div>
-                <button class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                  <span data-feather="calendar"></span>
-                  This week
-                </button>
-              </div>
-            </div>
-            
-            <div class="row">
-              {% for sample in samples %}
-              <div class="col">
-                <a href="data:image/png;base64,{{ sample }}" data-lightbox="photos">
-                  <img class="w-100" src='data:image/png;base64,{{ sample }}'/>
-                </a>
-              </div>
-              {% endfor %}
-            </div>  
-            
-            <div class="row mt-5">
-              <div class="col">
-                <div class="d-flex justify-content-center">
-                  <button id="btnSamplesPrevious" class="btn btn-primary">Charger les 5 precédentes</button>
-                  <button id="btnSamplesNext" class="btn btn-primary ml-3">Charger les 5 suivantes</button>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col">
-                <img class="w-100" src='data:image/png;base64,{{ hist1 }}'/>
-              </div>
-            </div>
-  
-          </main>
-        </div>
-      </div>
+<div class="row">
+  <div class="col">
+    <h2>Echantillon d'images</h2>
+  </div>
+</div>
+<div class="row row-cols-{{ indexes | length }}">
+  {% for index in indexes %}
+  <div class="col">
+    <div class="d-flex flex-column">
+      <a class="images-anchors" href="/sample_image?index={{ index }}" data-lightbox="photos">
+      <img class="images w-100" src='/sample_image?index={{ index }}'/>
+    </a>
+    <p class="text-center">{{ index }}</p>
     </div>
+  </div>
+  {% endfor %}
+</div>  
 
+<div class="row mt-5">
+  <div class="col">
+    <div class="d-flex justify-content-center">
+      <button disabled id="btnSamplesPrevious" class="btn btn-primary">Charger les {{ indexes | length}} precédentes</button>
+      <button id="btnSamplesNext" class="btn btn-primary ml-3">Charger les {{ indexes | length }} suivantes</button>
+    </div>
+  </div>
+</div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+<div class="row">
+  <div class="col">
+    <h2>Exploration dataset</h2>
+  </div>
+</div>
+<form id="form-values-by-step">
+  <div class="form-row">
+    <div class="form-group form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="train-check-1">
+      <label class="form-check-label" for="train-check-1">Train</label>
+    </div>
+    <div class="form-group form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="valid-check-1">
+      <label class="form-check-label" for="valid-check-1">Valid</label>
+    </div>
+    <div class="form-group form-check form-check-inline">
+      <input type="checkbox" class="form-check-input" id="test-check-1">
+      <label class="form-check-label" for="test-check-1">Test</label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Actualiser</button>
+</form>
+<div class="row">
+  <div class="col">
+    <img class="w-100" id="values-by-step" src=''/>
+  </div>
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+  // Images
+  const manageImg = () => {
+    const searchParam = new URLSearchParams()
+    let indexes = []
+    const anchors = Array.from(document.querySelectorAll('.images-anchors'))
+    const images = Array.from(document.querySelectorAll('.images'))
+    const count_indexes = images.length
+    let start_image  = 0
+    const btnSamplesPrevious = document.getElementById('btnSamplesPrevious')
+    const btnSamplesNext = document.getElementById('btnSamplesNext')
 
-    <!-- Icons -->
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>
-      feather.replace()
-    </script>  
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
-
-    <script>
-      const route = window.location.href.split('?')[0]
-      const hasInterrogation = route.endsWith('?');
-      const searchParam = new URLSearchParams(window.location.href.split('?')[1])
-      const sample_seed  = searchParam.has('sample_seed') ? +searchParam.get('sample_seed') : 0
-      
-      const btnSamplesPrevious = document.getElementById('btnSamplesPrevious')
-      const btnSamplesNext = document.getElementById('btnSamplesNext')
-
-      if (sample_seed === 0)
+    update = async () => {
+      const searchParam = new URLSearchParams()
+      searchParam.set('start_image', start_image.toString())
+      const response = await fetch('/images-indexes?' + searchParam.toString())
+      const result = await response.json()
+      let counter = 0
+      for (const index of result.indexes)
       {
-        btnSamplesPrevious.setAttribute('disabled', 'true')
+        const url = "sample_image?index=" + index
+        anchors[counter].href=url
+        images[counter].src=url
+        counter++
       }
+      if (start_image === 0)
+      {
+        btnSamplesPrevious.setAttribute('disabled', '')
+      } else {
+        btnSamplesPrevious.removeAttribute('disabled')
+      }
+    }
 
-      btnSamplesNext.onclick = () => {
-        searchParam.set('sample_seed', sample_seed+1)
-        window.location.href = route + (hasInterrogation ? '' : '?') + searchParam.toString()
-      }
+    btnSamplesNext.onclick = () => {
+      start_image += count_indexes
+      update()
+    }
 
-      btnSamplesPrevious.onclick = () => {
-        searchParam.set('sample_seed', sample_seed-1)
-        window.location.href = route + (hasInterrogation ? '' : '?') + searchParam.toString()
-      }
-      
-    </script>
-  </body>
-</html>
+    btnSamplesPrevious.onclick = () => {
+      start_image -= count_indexes
+      update()
+    }
+  }
+  manageImg();
+</script>
+<script type="module">
+  // Form graph values_by_step
+  const manageValuesByStep = () => {
+    const searchParam = new URLSearchParams(window.location.href.split('?')[1])
+    const graph = document.getElementById('values-by-step')
+    const form = document.getElementById('form-values-by-step')
+    const trainCheckBox1 = document.getElementById('train-check-1')
+    const validCheckBox1 = document.getElementById('valid-check-1')
+    const testCheckBox1 = document.getElementById('test-check-1')
+    const trainCheckBox1Checked = searchParam.has('train-check-1') ? searchParam.has('train-check-1')=='true' : true;
+    const validCheckBox1Checked = searchParam.has('valid-check-1') ? searchParam.has('valid-check-1')=='true' : true;
+    const testCheckBox1Checked = searchParam.has('test-check-1') ? searchParam.has('test-check-1')=='true' : true;
+
+    trainCheckBox1.checked = trainCheckBox1Checked
+    validCheckBox1.checked = validCheckBox1Checked
+    testCheckBox1.checked = testCheckBox1Checked
+
+    const update = () => {
+      searchParam.set('train', trainCheckBox1.checked.toString())
+      searchParam.set('valid', validCheckBox1.checked.toString())
+      searchParam.set('test', testCheckBox1.checked.toString())
+      searchParam.set('x', 'width')
+      graph.src="/values-by-step?" + searchParam.toString()
+    }
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      update()
+    }
+
+    update()
+  }
+  manageValuesByStep()
+
+</script>
+{% endblock %}
