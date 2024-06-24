@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col">
+    <form id="form-boxes-in-same-cell-by-step" class="form-inline">
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="train-check-5">
+        <label class="form-check-label" for="train-check-5">Train</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="valid-check-5">
+        <label class="form-check-label" for="valid-check-5">Valid</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="test-check-5">
+        <label class="form-check-label" for="test-check-5">Test</label>
+      </div>  
+      <button type="submit" class="btn btn-primary ml-2">Actualiser</button>
+    </form>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col">
+    <img class="w-100" id="boxes-in-same-cell-by-step"/>
+  </div>
+</div>
+
+{% block script %}
+<script type="text/javascript">
+  // Form graph values_by_step
+  const manageBoxesInSameCellByStep = () => {
+    const searchParam = new URLSearchParams(window.location.href.split('?')[1])
+    const graph = document.getElementById('boxes-in-same-cell-by-step')
+    const form = document.getElementById('form-boxes-in-same-cell-by-step')
+    const trainCheckBox5 = document.getElementById('train-check-5')
+    const validCheckBox5 = document.getElementById('valid-check-5')
+    const testCheckBox5 = document.getElementById('test-check-5')
+
+    trainCheckBox5.checked = true
+    validCheckBox5.checked = true
+    testCheckBox5.checked = true
+
+    const update = () => {
+      searchParam.set('train', trainCheckBox5.checked.toString())
+      searchParam.set('valid', validCheckBox5.checked.toString())
+      searchParam.set('test', testCheckBox5.checked.toString())
+      graph.src="/boxes-in-same-cell-by-step?" + searchParam.toString()
+    }
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      update()
+    }
+
+    update()
+  }
+  manageBoxesInSameCellByStep()
+
+</script>
+{% endblock %}

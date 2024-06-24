@@ -1,0 +1,46 @@
+{% extends "/skeleton.html" %}
+{% block activeExploration %}
+active
+{% endblock %}
+{% block body %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1>Exploration Dataset</h1>
+</div>
+
+<div class="row">
+  <div class="col">
+    <h2>Echantillon d'images</h2>
+  </div>
+</div>
+{% include('/exploration/sample_images.html') %}
+
+<div class="row mt-5">
+  <div class="col">
+    <h2>Exploration dataset</h2>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-xl-6 col-lg-12">
+    <h3 class="mt-3">Informations des images</h3>
+    {% include('/exploration/values_by_step.html') %}
+  </div>
+  <div class="col-xl-6 col-lg-12">
+    <h3 class="mt-3">Informations des boxes</h3>
+    {% include('/exploration/hist_by_step.html') %}
+  </div>
+  <div class="col-xl-6 col-lg-12">
+    <h3 class="mt-3">Boxes valides</h3>
+    {% include('/exploration/valid_boxes_by_step.html') %}
+  </div>
+  <div class="col-xl-6 col-lg-12">
+    <h3 class="mt-3">Boxes par image</h3>
+    {% include('/exploration/boxes_per_image_by_step.html') %}
+  </div>
+  <div class="col-lg-12">
+    <h3 class="mt-3">Boxes dans une même image</h3>
+    {% include('/exploration/boxes_in_same_cell_by_step.html') %}
+  </div>
+</div>
+
+{% endblock %}

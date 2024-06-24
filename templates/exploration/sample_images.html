@@ -1,0 +1,69 @@
+<div class="row row-cols-{{ indexes | length }}">
+  {% for index in indexes %}
+  <div class="col">
+    <div class="d-flex flex-column">
+      <a class="images-anchors" href="/image?index={{ index }}" data-lightbox="photos">
+        <img class="images w-100" src='/image?index={{ index }}'/>
+      </a>
+    <p class="text-center">{{ index }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>  
+
+<div class="row mt-5">
+  <div class="col">
+    <div class="d-flex justify-content-center">
+      <button disabled id="btnSamplesPrevious" class="btn btn-primary">Charger les {{ indexes | length}} precédentes</button>
+      <button id="btnSamplesNext" class="btn btn-primary ml-3">Charger les {{ indexes | length }} suivantes</button>
+    </div>
+  </div>
+</div>
+
+{% block script %}
+<script type="text/javascript">
+  // Images
+  const manageImg = () => {
+    const searchParam = new URLSearchParams()
+    let indexes = []
+    const anchors = Array.from(document.querySelectorAll('.images-anchors'))
+    const images = Array.from(document.querySelectorAll('.images'))
+    const count_indexes = images.length
+    let start_image  = 0
+    const btnSamplesPrevious = document.getElementById('btnSamplesPrevious')
+    const btnSamplesNext = document.getElementById('btnSamplesNext')
+
+    update = async () => {
+      const searchParam = new URLSearchParams()
+      searchParam.set('start_image', start_image.toString())
+      const response = await fetch('/images-indexes?' + searchParam.toString())
+      const result = await response.json()
+      let counter = 0
+      for (const index of result.indexes)
+      {
+        const url = "sample_image?index=" + index
+        anchors[counter].href=url
+        images[counter].src=url
+        counter++
+      }
+      if (start_image === 0)
+      {
+        btnSamplesPrevious.setAttribute('disabled', '')
+      } else {
+        btnSamplesPrevious.removeAttribute('disabled')
+      }
+    }
+
+    btnSamplesNext.onclick = () => {
+      start_image += count_indexes
+      update()
+    }
+
+    btnSamplesPrevious.onclick = () => {
+      start_image -= count_indexes
+      update()
+    }
+  }
+  manageImg();
+</script>
+{% endblock %}

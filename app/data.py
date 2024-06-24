@@ -320,7 +320,6 @@ class Data():
     def plot_box_in_same_cell(self, steps=Steps.ALL):
         dfs = self.get_dfs(filter_valid=True, filter_min_size=Config.BATCH_IMAGE_SIZE)
         fig, axis = plt.subplots(1, len(steps), layout='constrained', sharey=True)
-        fig.set_figwidth(12)
         fig.suptitle(f'Dépassement du nombre de boites dans une même cellule (max={len(Config.ANCHORS)})')
         for index, step in enumerate(steps):
             current_axis = axis[index] if type(axis) is np.ndarray else axis
@@ -335,8 +334,10 @@ class Data():
         fig.supylabel('Nombre d\'images')
         
         if self.mode == 'notebook':
+            fig.set_figwidth(12)
             plt.show()
         else:
+            fig.set_figwidth(15)
             buf = BytesIO()
             fig.savefig(buf, format="png")
             return buf.getbuffer().tobytes()
@@ -353,7 +354,7 @@ class Data():
         else:
             return indexes
 
-    def get(self, index, crop=Config.BATCH_IMAGE_SIZE, seed = None):
+    def get(self, index, crop=Config.BATCH_IMAGE_SIZE, seed = 123):
         dfs = self.get_dfs()
 
         # Image
@@ -366,9 +367,8 @@ class Data():
         yolo_boxes = [[box.x, box.y, box.width, box.height] for _, box in df_boxes.iterrows()]
 
         # Transform
-        if seed is not None:
-            random.seed(seed)
-            imgaug.random.seed(seed)
+        random.seed(seed)
+        imgaug.random.seed(seed)
 
         format_transform = A.Compose([
             A.RandomCrop(
@@ -403,9 +403,9 @@ class Data():
                 'area': width*height
             }
 
-    def display_image(self, index, with_boxes=True, crop=Config.BATCH_IMAGE_SIZE, ax = None, print_target=False, seed=None):
+    def display_image(self, index, with_boxes=True, crop=Config.BATCH_IMAGE_SIZE, ax = None, print_target=False, seed=123):
         [image, yolo_boxes, target, table] = self.get(index=index, crop=crop, seed=seed)
-        if print_target:
+        if print_target and self.mode == 'notebook':
             self.message.print(tabulate(table, headers='firstrow', tablefmt='fancy_grid'))
         if with_boxes:
             self.draw_image(image=image, yolo_boxes=yolo_boxes, ax=ax)

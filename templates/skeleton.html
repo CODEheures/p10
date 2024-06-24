@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="/docs/4.1/assets/img/favicons/favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
-
-    <link rel="canonical" href="https://getbootstrap.com/docs/4.1/examples/dashboard/">
+    <title>YOLO</title>
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
@@ -105,14 +102,20 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                <a class="nav-link {% block activeDashboard %}{% endblock %}" href="/dashboard">
+                <a class="nav-link {% block activeExploration %}{% endblock %}" href="/explore">
                   <span data-feather="pie-chart"></span>
-                  Dashboard <span class="sr-only">(current)</span>
+                  Exploration
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link {% block activePredict %}{% endblock %}" href="/predict">
+                <a class="nav-link {% block activePerformance %}{% endblock %}" href="/perfs">
                   <span data-feather="activity"></span>
+                  Performances
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link {% block activePrediction %}{% endblock %}" href="/predict">
+                  <span data-feather="crosshair"></span>
                   Prediction
                 </a>
               </li>

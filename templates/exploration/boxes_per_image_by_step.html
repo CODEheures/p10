@@ -1,0 +1,58 @@
+<div class="row">
+  <div class="col">
+    <form id="form-boxes-per-image-by-step" class="form-inline">
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="train-check-4">
+        <label class="form-check-label" for="train-check-4">Train</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="valid-check-4">
+        <label class="form-check-label" for="valid-check-4">Valid</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="test-check-4">
+        <label class="form-check-label" for="test-check-4">Test</label>
+      </div>  
+      <button type="submit" class="btn btn-primary ml-2">Actualiser</button>
+    </form>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col">
+    <img class="w-100" id="boxes-per-image-by-step"/>
+  </div>
+</div>
+
+{% block script %}
+<script type="text/javascript">
+  // Form graph values_by_step
+  const manageBoxesPerImageByStep = () => {
+    const searchParam = new URLSearchParams(window.location.href.split('?')[1])
+    const graph = document.getElementById('boxes-per-image-by-step')
+    const form = document.getElementById('form-boxes-per-image-by-step')
+    const trainCheckBox4 = document.getElementById('train-check-4')
+    const validCheckBox4 = document.getElementById('valid-check-4')
+    const testCheckBox4 = document.getElementById('test-check-4')
+
+    trainCheckBox4.checked = true
+    validCheckBox4.checked = true
+    testCheckBox4.checked = true
+
+    const update = () => {
+      searchParam.set('train', trainCheckBox4.checked.toString())
+      searchParam.set('valid', validCheckBox4.checked.toString())
+      searchParam.set('test', testCheckBox4.checked.toString())
+      graph.src="/boxes-per-image-by-step?" + searchParam.toString()
+    }
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      update()
+    }
+
+    update()
+  }
+  manageBoxesPerImageByStep()
+
+</script>
+{% endblock %}

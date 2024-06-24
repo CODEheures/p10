@@ -1,0 +1,76 @@
+<div class="row">
+  <div class="col">
+    <form id="form-hist-by-step" class="form-inline">
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="train-check-2">
+        <label class="form-check-label" for="train-check-2">Train</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="valid-check-2">
+        <label class="form-check-label" for="valid-check-2">Valid</label>
+      </div>
+      <div class="form-group form-check form-check-inline">
+        <input type="checkbox" class="form-check-input" id="test-check-2">
+        <label class="form-check-label" for="test-check-2">Test</label>
+      </div>  
+      <label class="d-none" for="select-2">Attribut</label>
+      <select class="custom-select ml-2" id="select-2">
+        <option value="x">X</option>
+        <option value="y">Y</option>
+        <option value="width">Largeur</option>
+        <option value="height">Hauteur</option>
+        <option value="surface">Surface</option>
+      </select>
+      <div class="form-group ml-2" style="width: 100px;">
+        <label for="range-2">Découpage: <span id="rangeval">10</span></label>
+        <input type="range" class="form-control-range" id="range-2" min="4" max="25"
+        onInput="document.getElementById('rangeval').innerText = document.getElementById('range-2').value">
+      </div>
+      <button type="submit" class="btn btn-primary ml-2">Actualiser</button>
+    </form>
+  </div>
+</div>
+<div class="row mt-4">
+  <div class="col">
+    <img class="w-100" id="hist-by-step"/>
+  </div>
+</div>
+{% block script %}
+<script type="text/javascript">
+  // Form graph values_by_step
+  const manageHistByStep = () => {
+    const searchParam = new URLSearchParams(window.location.href.split('?')[1])
+    const graph = document.getElementById('hist-by-step')
+    const form = document.getElementById('form-hist-by-step')
+    const trainCheckBox2 = document.getElementById('train-check-2')
+    const validCheckBox2 = document.getElementById('valid-check-2')
+    const testCheckBox2 = document.getElementById('test-check-2')
+    const select2 = document.getElementById('select-2')
+    const range2 = document.getElementById('range-2')
+
+    trainCheckBox2.checked = true
+    validCheckBox2.checked = true
+    testCheckBox2.checked = true
+    select2.value = 'x'
+    range2.value = 10
+
+    const update = () => {
+      searchParam.set('train', trainCheckBox2.checked.toString())
+      searchParam.set('valid', validCheckBox2.checked.toString())
+      searchParam.set('test', testCheckBox2.checked.toString())
+      searchParam.set('x', select2.value)
+      searchParam.set('bins', range2.value)
+      graph.src="/hist-by-step?" + searchParam.toString()
+    }
+
+    form.onsubmit = (event) => {
+      event.preventDefault();
+      update()
+    }
+
+    update()
+  }
+  manageHistByStep()
+
+</script>
+{% endblock %}
