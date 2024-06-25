@@ -16,9 +16,13 @@ active
   {% include('/common/sample_images.html') %}
 {% endwith %}
 
-<div class="row d-none" id="predict-row">
+<div class="row">
   <div class="col">
     <h2>Résultat de la prédiction</h2>
+    <div id="loader" class="d-none align-items-center">
+      <strong>Loading...</strong>
+      <div class="spinner-border ml-auto" role="status" aria-hidden="true"></div>
+    </div>
     <img id="predict-image" class="w-100"/>
   </div>
 </div>
@@ -30,17 +34,25 @@ active
   // Images
   const manageImgClick = () => {
     const images = Array.from(document.querySelectorAll('.images'))
-    const predictRow = document.getElementById('predict-row')
     const predictImg = document.getElementById('predict-image')
+    const loader = document.getElementById('loader')
     for (const image of images)
     {
       image.onclick = async () => {
+        predictImg.classList.add('d-none')
+        loader.classList.remove('d-none')
+        loader.classList.add('d-flex')
         const searchParam = new URLSearchParams(image.src.split('?')[1])
         const index = searchParam.get('index')
-        predictRow.classList.remove('d-none')
         predictImg.src = "predict_image?index=" + index
       }
     }
+
+    predictImg.addEventListener("load", () => {
+      predictImg.classList.remove('d-none')
+      loader.classList.add('d-none')
+      loader.classList.remove('d-flex')
+    })
   }
   manageImgClick();
 </script>

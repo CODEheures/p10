@@ -1,4 +1,4 @@
-<div class="row {% if mode=='predict' %}row-cols-3{% else %}row-cols-{{ indexes | length }}{% endif %}">
+<div class="row {% if mode=='predict' %}row-cols-5{% else %}row-cols-{{ indexes | length }}{% endif %}">
   {% for index in indexes %}
   <div class="col">
     <div class="d-flex flex-column">
@@ -8,8 +8,8 @@
         <a class="images-anchors" href="/image?index={{ index }}" data-lightbox="photos">
           <img class="images w-100" src='/image?index={{ index }}'/>
         </a>
+        <p class="text-center">{{ index }}</p>
       {% endif %}
-    <p class="text-center">{{ index }}</p>
     </div>
   </div>
   {% endfor %}

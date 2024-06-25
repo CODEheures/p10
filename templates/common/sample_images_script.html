@@ -13,13 +13,17 @@
     update = async () => {
       const searchParam = new URLSearchParams()
       searchParam.set('start_image', start_image.toString())
+      searchParam.set('quantity', count_indexes)
       const response = await fetch('/images-indexes?' + searchParam.toString())
       const result = await response.json()
       let counter = 0
       for (const index of result.indexes)
       {
-        const url = "sample_image?index=" + index
-        anchors[counter].href=url
+        const url = "image?index=" + index
+        if (anchors.length)
+        {
+          anchors[counter].href=url
+        }
         images[counter].src=url
         counter++
       }

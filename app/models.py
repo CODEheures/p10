@@ -7,6 +7,8 @@ import os
 from pathlib import Path
 import matplotlib.pyplot as plt
 from io import BytesIO
+#import tempfile  
+import logging
 
 class Models():
 
@@ -33,8 +35,10 @@ class Models():
     def predict(self, index, model='yolov3n', version='1.0.0'):
         [image, bboxes, _, _] = self.data.get(index=index, seed=0)
 
-        local_model_dir = f'{model}/{version}/'
-        local_model_path = f'{local_model_dir}/best.pt'
+        # temp_file_path = tempfile.gettempdir()  
+        local_model_dir = os.path.join(model, version)
+        local_model_path = os.path.join(local_model_dir, 'best.pt')
+        logging.info(local_model_path)
         if not os.path.exists(local_model_path):
             comet_ml.init(project_name=model)
             api = comet_ml.API()

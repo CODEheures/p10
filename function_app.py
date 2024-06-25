@@ -43,7 +43,7 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
 def predict(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher une prédiction
     """
-    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=3, roll=135)
+    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=10, roll=135)
     template = env.get_template("prediction/predict.html")
     html = template.render(indexes=indexes)
     return func.HttpResponse(
@@ -63,7 +63,8 @@ def predict_image(req: func.HttpRequest) -> func.HttpResponse:
 @app.route(route="/images-indexes", methods=["GET"])
 def images_indexes(req: func.HttpRequest) -> func.HttpResponse:
     start_image = req.params.get('start_image')
-    indexes = data.get_indexes(step=Steps.TEST, start=int(start_image), quantity=3, roll=135)
+    quantity = req.params.get('quantity')
+    indexes = data.get_indexes(step=Steps.TEST, start=int(start_image), quantity=int(quantity), roll=135)
     return func.HttpResponse(
                         json.dumps({'indexes': indexes}),
                         mimetype="application/json",
