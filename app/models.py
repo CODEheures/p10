@@ -1,19 +1,21 @@
 import comet_ml
 from ultralytics import YOLO
 from ultralytics import settings
-from data import Data
-from config import Config
+from app.data import Data
+from app.config import Config
 import os
 from pathlib import Path
 import matplotlib.pyplot as plt
+from io import BytesIO
 
 class Models():
 
-    def __init__(self, data: Data):
+    def __init__(self, data: Data, prepare_for_train = True):
         self.loaded = {}
         self.data = data
         
-        self.data.prepare_data()
+        if prepare_for_train:
+            self.data.prepare_data()
 
     def train_yolo(self, model_name='yolov3n', epochs=10, fraction=1, pretrained=False):
         experiment = 'yolo'
@@ -54,3 +56,12 @@ class Models():
         self.data.draw_image(image=image, ax=axis[0])
         self.data.draw_image(image=image, yolo_boxes=bboxes, ax=axis[1])
         self.data.draw_image(image=image, yolo_boxes=predict[0].boxes.xywhn.cpu().numpy(), ax=axis[2])
+
+        if self.data.mode == 'notebook':
+            fig.set_figwidth(12)
+            plt.show()
+        else:
+            fig.set_figwidth(15)
+            buf = BytesIO()
+            fig.savefig(buf, format="png")
+            return buf.getbuffer().tobytes()

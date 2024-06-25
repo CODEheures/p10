@@ -9,7 +9,39 @@ active
 
 <div class="row">
   <div class="col">
-    <h2>Hello</h2>
+    <h2>Choisir une images</h2>
   </div>
 </div>
+{% with mode='predict' %}
+  {% include('/common/sample_images.html') %}
+{% endwith %}
+
+<div class="row d-none" id="predict-row">
+  <div class="col">
+    <h2>Résultat de la prédiction</h2>
+    <img id="predict-image" class="w-100"/>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% include('/common/sample_images_script.html') %}
+<script type="text/javascript">
+  // Images
+  const manageImgClick = () => {
+    const images = Array.from(document.querySelectorAll('.images'))
+    const predictRow = document.getElementById('predict-row')
+    const predictImg = document.getElementById('predict-image')
+    for (const image of images)
+    {
+      image.onclick = async () => {
+        const searchParam = new URLSearchParams(image.src.split('?')[1])
+        const index = searchParam.get('index')
+        predictRow.classList.remove('d-none')
+        predictImg.src = "predict_image?index=" + index
+      }
+    }
+  }
+  manageImgClick();
+</script>
 {% endblock %}

@@ -1,7 +1,12 @@
 {% extends "/skeleton.html" %}
+{% block headLink %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/css/lightbox.min.css">
+{% endblock %}
+
 {% block activeExploration %}
 active
 {% endblock %}
+
 {% block body %}
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
   <h1>Exploration Dataset</h1>
@@ -12,7 +17,7 @@ active
     <h2>Echantillon d'images</h2>
   </div>
 </div>
-{% include('/exploration/sample_images.html') %}
+{% include('/common/sample_images.html') %}
 
 <div class="row mt-5">
   <div class="col">
@@ -43,4 +48,9 @@ active
   </div>
 </div>
 
+{% endblock %}
+
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
+{% include('/common/sample_images_script.html') %}
 {% endblock %}

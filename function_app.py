@@ -1,5 +1,6 @@
 import azure.functions as func
 from app.data import Data
+from app.models import Models
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from app.steps import Steps
 import json
@@ -11,6 +12,7 @@ env = Environment(
 )
 
 data = Data(mode='html')
+models = Models(data=data, prepare_for_train=False)
 
 @app.route(route="/explore", methods=["GET"])
 def explore(req: func.HttpRequest) -> func.HttpResponse:
@@ -38,15 +40,24 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
                  )
 
 @app.route(route="/predict", methods=["GET"])
-def prediction(req: func.HttpRequest) -> func.HttpResponse:
+def predict(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher une prédiction
     """
+    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=3, roll=135)
     template = env.get_template("prediction/predict.html")
-    html = template.render()
-
+    html = template.render(indexes=indexes)
     return func.HttpResponse(
                         html,
                         mimetype="text/html",
+                 )
+
+@app.route(route="/predict_image", methods=["GET"])
+def predict_image(req: func.HttpRequest) -> func.HttpResponse:
+    index = req.params.get('index')
+    return func.HttpResponse(
+
+                        models.predict(index=index),
+                        mimetype="image/png",
                  )
 
 @app.route(route="/images-indexes", methods=["GET"])

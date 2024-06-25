@@ -1,0 +1,25 @@
+<div class="row {% if mode=='predict' %}row-cols-3{% else %}row-cols-{{ indexes | length }}{% endif %}">
+  {% for index in indexes %}
+  <div class="col">
+    <div class="d-flex flex-column">
+      {% if mode == 'predict' %}
+        <img class="images w-100" src='/image?index={{ index }}'/>
+      {% else %}
+        <a class="images-anchors" href="/image?index={{ index }}" data-lightbox="photos">
+          <img class="images w-100" src='/image?index={{ index }}'/>
+        </a>
+      {% endif %}
+    <p class="text-center">{{ index }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>  
+
+<div class="row mt-5">
+  <div class="col">
+    <div class="d-flex justify-content-center">
+      <button disabled id="btnSamplesPrevious" class="btn btn-primary">Charger les {{ indexes | length}} precédentes</button>
+      <button id="btnSamplesNext" class="btn btn-primary ml-3">Charger les {{ indexes | length }} suivantes</button>
+    </div>
+  </div>
+</div>
