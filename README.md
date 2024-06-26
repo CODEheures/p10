@@ -1,2 +1,2 @@
 # p10
-https://p10.azurewebsites.net/dashboard
+https://p10.azurewebsites.net/explore
