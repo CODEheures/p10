@@ -35,14 +35,22 @@
       }
     }
 
-    btnSamplesNext.onclick = () => {
+    btnSamplesNext.onclick = async () => {
       start_image += count_indexes
-      update()
+      await update()
+      if (typeof managePrediction === 'function')
+      {
+        managePrediction()
+      }
     }
 
-    btnSamplesPrevious.onclick = () => {
+    btnSamplesPrevious.onclick = async () => {
       start_image -= count_indexes
-      update()
+      await update()
+      if (typeof managePrediction === 'function')
+      {
+        managePrediction()
+      }
     }
   }
   manageImg();

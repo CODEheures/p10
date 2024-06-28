@@ -13,12 +13,13 @@ env = Environment(
 
 data = Data(mode='html')
 models = Models(data=data, prepare_for_train=False)
+roll = 900
 
 @app.route(route="/explore", methods=["GET"])
 def explore(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher l'exploration
     """
-    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=3, roll=135)
+    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=3, roll=roll)
     template = env.get_template("exploration/explore.html")
     html = template.render(indexes=indexes)
 
@@ -43,7 +44,7 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
 def predict(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher une prédiction
     """
-    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=10, roll=135)
+    indexes = data.get_indexes(step=Steps.TEST, start=0, quantity=10, roll=roll)
     template = env.get_template("prediction/predict.html")
     html = template.render(indexes=indexes)
     return func.HttpResponse(
@@ -54,9 +55,9 @@ def predict(req: func.HttpRequest) -> func.HttpResponse:
 @app.route(route="/predict_image", methods=["GET"])
 def predict_image(req: func.HttpRequest) -> func.HttpResponse:
     index = req.params.get('index')
+    model = req.params.get('model')
     return func.HttpResponse(
-
-                        models.predict(index=index),
+                        models.predict(index=index, model=model),
                         mimetype="image/png",
                  )
 
@@ -64,7 +65,7 @@ def predict_image(req: func.HttpRequest) -> func.HttpResponse:
 def images_indexes(req: func.HttpRequest) -> func.HttpResponse:
     start_image = req.params.get('start_image')
     quantity = req.params.get('quantity')
-    indexes = data.get_indexes(step=Steps.TEST, start=int(start_image), quantity=int(quantity), roll=135)
+    indexes = data.get_indexes(step=Steps.TEST, start=int(start_image), quantity=int(quantity), roll=roll)
     return func.HttpResponse(
                         json.dumps({'indexes': indexes}),
                         mimetype="application/json",

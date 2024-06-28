@@ -15,7 +15,25 @@ active
 {% with mode='predict' %}
   {% include('/common/sample_images.html') %}
 {% endwith %}
-
+<div class="row mt-5">
+  <div class="col">
+    <form id="form-predict">
+      <div class="form-row form-inline">
+          <label for="select-model">Modèle</label>
+          <select class="custom-select ml-2" id="select-model">
+            <option value="yolov3n">Yolo V3n</option>
+            <option value="yolov3npretrained">Yolo V3n pré-entrainé</option>
+            <option value="yolov5n">Yolo V5n</option>
+            <option value="yolov5npretrained">Yolo V5n pré-entrainé</option>
+            <option value="yolov6n">Yolo V6n</option>
+            <option value="yolov8n">Yolo V8n</option>
+            <option value="yolov8npretrained">Yolo V8n pré-entrainé</option>
+          </select>
+          <button disabled="true" id="btn-submit" type="submit" class="btn btn-primary ml-2">Lancer la prédiction</button>
+      </div>
+    </form>
+  </div>
+</div>
 <div class="row">
   <div class="col">
     <h2>Résultat de la prédiction</h2>
@@ -32,20 +50,47 @@ active
 {% include('/common/sample_images_script.html') %}
 <script type="text/javascript">
   // Images
-  const manageImgClick = () => {
+  const managePrediction = () => {
     const images = Array.from(document.querySelectorAll('.images'))
+    const selectModel = document.getElementById('select-model')
+    const form = document.getElementById('form-predict')
+    const btnSubmit = document.getElementById('btn-submit')
+
     const predictImg = document.getElementById('predict-image')
     const loader = document.getElementById('loader')
+    
+    clearSelection = () => {
+      for (const image of images)
+      {
+        image.classList.remove('border', 'border-success')
+      }
+    }
+
+    let selectedIndex = ''
+    selectModel.value = 'yolov3n'
+    btnSubmit.setAttribute('disabled', 'true')
+    clearSelection()
+
     for (const image of images)
     {
       image.onclick = async () => {
-        predictImg.classList.add('d-none')
-        loader.classList.remove('d-none')
-        loader.classList.add('d-flex')
+        clearSelection()
+        image.classList.add('border', 'border-success')
         const searchParam = new URLSearchParams(image.src.split('?')[1])
-        const index = searchParam.get('index')
-        predictImg.src = "predict_image?index=" + index
+        selectedIndex = searchParam.get('index')
+        btnSubmit.removeAttribute('disabled')
       }
+    }
+
+    form.onsubmit = (event) => {
+      event.preventDefault()
+      predictImg.classList.add('d-none')
+      loader.classList.remove('d-none')
+      loader.classList.add('d-flex')
+      const searchParam = new URLSearchParams()
+      searchParam.set('index', selectedIndex)
+      searchParam.set('model', selectModel.value)
+      predictImg.src = "predict_image?" + searchParam.toString()
     }
 
     predictImg.addEventListener("load", () => {
@@ -54,6 +99,6 @@ active
       loader.classList.remove('d-flex')
     })
   }
-  manageImgClick();
+  managePrediction();
 </script>
 {% endblock %}
