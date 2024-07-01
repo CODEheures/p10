@@ -1,4 +1,7 @@
 {% extends "/skeleton.html" %}
+{% block headScript%}
+<script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+{% endblock %}
 {% block activePerformance %}
 active
 {% endblock %}
@@ -8,125 +11,47 @@ active
 </div>
 
 <div class="row">
-  <div class="col">
-    <h2>Hello</h2>
-    <div>
-      <canvas id="myChart"></canvas>
-    </div>
+  <div class="col-6">
+    <h2>Performances</h2>
+    <div id="perf1"></div>
+  </div>
+  <div class="col-6">
+    <h2>Loss</h2>
+    <div id="loss"></div>
   </div>
 </div>
 {% endblock %}
 
 {% block script %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-
 <script>
-  const ctx = document.getElementById('myChart');
-  Chart.register(ChartDataLabels);
+  const perf1 = document.getElementById('perf1');
+  const loss = document.getElementById('loss');
+  dataPerf1 = {{ dataPerf1|safe }}
+  dataLoss = {{ dataLoss|safe }}
 
-  new Chart(ctx, {
-    type: 'bubble',
+	
+  Plotly.newPlot( perf1, dataPerf1, 
+  {
     title: 'metrics/mAP50(B) VS model/speed_PyTorch(ms)',
-    data: {
-      labels: ["YoloV8n Pretrained","YoloV5n Pretrained","YoloV3n Pretrained","YoloV8n","YoloV6n","YoloV5n","YoloV3n"],
-      datasets: [{
-        label: "YoloV8n Pretrained",
-        datalabels: {
-          formatter: function(value, context) {
-            console.log(context)
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":1.474,"y":0.44331841317609494, "r":8}],
-      },
-      {
-        label: "YoloV5n Pretrained",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":1.748,"y":0.4580136043787167, "r":8}],
-      },
-      {
-        label: "YoloV3n Pretrained",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":9.355,"y":0.4550785401618839,"r":8}],
-      },
-      {
-        label: "YoloV8n",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":1.743,"y":0.39329912316262744,"r":8}],
-      },
-      {
-        label: "YoloV6n",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":1.666,"y":0.37824118807547147,"r":8}],
-      },
-      {
-        label: "YoloV5n",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":1.968,"y":0.3807366713308166,"r":8}],
-      },
-      {
-        label: "YoloV3n",
-        datalabels: {
-          formatter: function(value, context) {
-            return context.dataset.label;
-          },
-          align: 'bottom',
-          offset: 8
-        },
-        data: [{"x":9.642,"y":0.3897209123629571,"r":8}],
-      }]
+    xaxis: {
+      title: 'model/speed_PyTorch(ms)'
     },
-    options: {
-      scales: {
-        x: {
-          title: {display: true, text: "model/speed_PyTorch(ms)"}
-        },
-        y: {
-          title: {display: true, text: "metrics/mAP50(B)"},
-          min: 0.36,
-          max: 0.46
-        }
-      },
-      plugins: {
-        ChartDataLabels,
-        legend: {
-          display: false,
-        },
-      },
+    yaxis: {
+      title: 'metrics/mAP50(B)'
     }
+  });
+
+  Plotly.newPlot( loss, dataLoss, 
+  {
+    title: 'metrics/mAP50-95(B) VS step',
+    xaxis: {
+      title: 'step'
+    },
+    yaxis: {
+      title: 'metrics/mAP50-95(B)'
+    },
+    showlegend: false,
+    hovermode: 'x unified'
   });
 </script>
 {% endblock %}

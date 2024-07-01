@@ -4,6 +4,7 @@ from app.models import Models
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from app.steps import Steps
 import json
+import logging
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 env = Environment(
@@ -33,8 +34,10 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher les performances modèles
     """
     template = env.get_template("performances/perfs.html")
-    html = template.render()
+    dataPerf1 = json.load(open('metrics_mAP50(B)_VS_model_speed_PyTorch(ms)_chart_data.json'))
+    dataLoss = json.load(open('loss_VS_step_chart_data.json'))
 
+    html = template.render(dataPerf1=dataPerf1, dataLoss=dataLoss)
     return func.HttpResponse(
                         html,
                         mimetype="text/html",
