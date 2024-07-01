@@ -11,12 +11,26 @@ active
 </div>
 
 <div class="row">
-  <div class="col-6">
+  <div class="col">
     <h2>Performances</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
     <div id="perf1"></div>
   </div>
   <div class="col-6">
+    <div id="perf2"></div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
     <h2>Loss</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-12">
     <div id="loss"></div>
   </div>
 </div>
@@ -27,6 +41,7 @@ active
   const perf1 = document.getElementById('perf1');
   const loss = document.getElementById('loss');
   dataPerf1 = {{ dataPerf1|safe }}
+  dataPerf2 = {{ dataPerf2|safe }}
   dataLoss = {{ dataLoss|safe }}
 
 	
@@ -49,6 +64,19 @@ active
     },
     yaxis: {
       title: 'metrics/mAP50-95(B)'
+    },
+    showlegend: false,
+    hovermode: 'x unified'
+  });
+
+  Plotly.newPlot( perf2, dataPerf2, 
+  {
+    title: 'metrics/mAP50(B) VS step',
+    xaxis: {
+      title: 'step'
+    },
+    yaxis: {
+      title: 'metrics/mAP50(B)'
     },
     showlegend: false,
     hovermode: 'x unified'

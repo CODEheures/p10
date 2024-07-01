@@ -35,9 +35,10 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
     """
     template = env.get_template("performances/perfs.html")
     dataPerf1 = json.load(open('metrics_mAP50(B)_VS_model_speed_PyTorch(ms)_chart_data.json'))
+    dataPerf2 = json.load(open('metrics_mAP50(B)_VS_step_chart_data.json'))
     dataLoss = json.load(open('loss_VS_step_chart_data.json'))
 
-    html = template.render(dataPerf1=dataPerf1, dataLoss=dataLoss)
+    html = template.render(dataPerf1=dataPerf1, dataPerf2=dataPerf2, dataLoss=dataLoss)
     return func.HttpResponse(
                         html,
                         mimetype="text/html",
