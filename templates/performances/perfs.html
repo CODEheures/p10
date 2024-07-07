@@ -44,6 +44,25 @@ active
   dataPerf2 = {{ dataPerf2|safe }}
   dataLoss = {{ dataLoss|safe }}
 
+  for (const data of [dataPerf1, dataPerf2, dataLoss])
+  {
+    for (const serie of data)
+    {
+      serie.transforms= [
+              {
+                "type": "aggregate",
+                "groups": "x",
+                "aggregations": [
+                  {
+                    "target": "y",
+                    "func": "last",
+                    "enabled": true
+                  }
+                ]
+              }
+          ]
+    }
+  }
 	
   Plotly.newPlot( perf1, dataPerf1, 
   {
@@ -58,12 +77,12 @@ active
 
   Plotly.newPlot( loss, dataLoss, 
   {
-    title: 'metrics/mAP50-95(B) VS step',
+    title: 'Validation Dfl Loss VS epoch',
     xaxis: {
-      title: 'step'
+      title: 'epoch'
     },
     yaxis: {
-      title: 'metrics/mAP50-95(B)'
+      title: 'Validation Dfl Loss'
     },
     showlegend: false,
     hovermode: 'x unified'
@@ -71,9 +90,9 @@ active
 
   Plotly.newPlot( perf2, dataPerf2, 
   {
-    title: 'metrics/mAP50(B) VS step',
+    title: 'metrics/mAP50(B) VS epoch',
     xaxis: {
-      title: 'step'
+      title: 'epoch'
     },
     yaxis: {
       title: 'metrics/mAP50(B)'
