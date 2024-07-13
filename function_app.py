@@ -4,7 +4,7 @@ from app.models import Models
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from app.steps import Steps
 import json
-import logging
+import os
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 env = Environment(
@@ -34,11 +34,13 @@ def performances(req: func.HttpRequest) -> func.HttpResponse:
     """Route pour afficher les performances modèles
     """
     template = env.get_template("performances/perfs.html")
-    dataPerf1 = json.load(open('metrics_mAP50(B)_VS_model_speed_PyTorch(ms)_chart_data.json'))
-    dataPerf2 = json.load(open('metrics_mAP50(B)_VS_epoch_chart_data.json'))
-    dataLoss = json.load(open('val_dfl_loss VS epoch_chart_data.json'))
+    dataPerf1 = json.load(open(os.path.join('metrics','metrics_mAP50(B) VS model_GFLOPs_chart_data.json')))
+    dataPerf2 = json.load(open(os.path.join('metrics','metrics_mAP50(B) VS epoch_chart_data.json')))
+    dataTrainLoss = json.load(open(os.path.join('metrics','train_dfl_loss VS epoch_chart_data.json')))
+    dataValLoss = json.load(open(os.path.join('metrics','val_dfl_loss VS epoch_chart_data.json')))
 
-    html = template.render(dataPerf1=dataPerf1, dataPerf2=dataPerf2, dataLoss=dataLoss)
+
+    html = template.render(dataPerf1=dataPerf1, dataPerf2=dataPerf2, dataTrainLoss=dataTrainLoss, dataValLoss=dataValLoss)
     return func.HttpResponse(
                         html,
                         mimetype="text/html",
@@ -61,7 +63,7 @@ def predict_image(req: func.HttpRequest) -> func.HttpResponse:
     index = req.params.get('index')
     model = req.params.get('model')
     return func.HttpResponse(
-                        models.predict(index=index, model=model),
+                        models.predict(index=index, model=model, version='3.0.0'),
                         mimetype="image/png",
                  )
 
