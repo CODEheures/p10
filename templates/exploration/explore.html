@@ -53,4 +53,11 @@ active
 {% block script %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.8.2/js/lightbox.min.js"></script>
 {% include('/common/sample_images_script.html') %}
+<script>
+  setTimeout(() => {
+    document.querySelector('img.lb-image').setAttribute('alt', 'image publicitaire de la librairie lightbox')
+    document.querySelector('a.lb-prev').innerHTML = '<span style="display: none;">prev</span>'
+    document.querySelector('a.lb-next').innerHTML = '<span style="display: none;">next</span>'
+  }, 1000)
+</script>
 {% endblock %}

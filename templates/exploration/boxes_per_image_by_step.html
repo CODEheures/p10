@@ -43,6 +43,21 @@
       searchParam.set('valid', validCheckBox4.checked.toString())
       searchParam.set('test', testCheckBox4.checked.toString())
       graph.src="/boxes-per-image-by-step?" + searchParam.toString()
+      let steps = []
+      if (trainCheckBox4.checked)
+      {
+        steps.push('train')
+      }
+      if (validCheckBox4.checked)
+      {
+        steps.push('valid')
+      }
+      if (testCheckBox4.checked)
+      {
+        steps.push('test')
+      }
+      graph.setAttribute('alt', "Depassement du nombre de boites dans une même cellule max 3) pour: " + steps.join(' - '))
+    
     }
 
     form.onsubmit = (event) => {

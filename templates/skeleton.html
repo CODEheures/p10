@@ -10,7 +10,15 @@
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-
+    <style>
+      :root {
+        --blue: #004C9E;
+        --primary: #004C9E;
+      }
+      .btn-primary {
+        background-color: #004C9E;
+      }
+    </style>
     {% block headLink %}{% endblock %}
     {% block headScript %}{% endblock %}
 
@@ -64,7 +72,7 @@
         }
 
         .sidebar .nav-link.active {
-            color: #007bff;
+            color: #004C9E;
         }
 
         .sidebar .nav-link:hover .feather,

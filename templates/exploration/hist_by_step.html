@@ -13,7 +13,7 @@
         <input type="checkbox" class="form-check-input" id="test-check-2">
         <label class="form-check-label" for="test-check-2">Test</label>
       </div>  
-      <label class="d-none" for="select-2">Attribut</label>
+      <label for="select-2">Attribut:</label>
       <select class="custom-select ml-2" id="select-2">
         <option value="x">X</option>
         <option value="y">Y</option>
@@ -61,6 +61,21 @@
       searchParam.set('x', select2.value)
       searchParam.set('bins', range2.value)
       graph.src="/hist-by-step?" + searchParam.toString()
+
+      let steps = []
+      if (trainCheckBox2.checked)
+      {
+        steps.push('train')
+      }
+      if (validCheckBox2.checked)
+      {
+        steps.push('valid')
+      }
+      if (testCheckBox2.checked)
+      {
+        steps.push('test')
+      }
+      graph.setAttribute('alt', "Repartition des boxes en " + select2.options[select2.selectedIndex].innerHTML +  " pour: " + steps.join(' - '))
     }
 
     form.onsubmit = (event) => {

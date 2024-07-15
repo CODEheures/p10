@@ -3,10 +3,10 @@
   <div class="col">
     <div class="d-flex flex-column">
       {% if mode == 'predict' %}
-        <img class="images w-100" src='/image?index={{ index }}'/>
+        <img class="images w-100" src='/image?index={{ index }}' alt="image de prediction n° {{ index }}"/>
       {% else %}
         <a class="images-anchors" href="/image?index={{ index }}" data-lightbox="photos">
-          <img class="images w-100" src='/image?index={{ index }}'/>
+          <img class="images w-100" src='/image?index={{ index }}' alt="image echantillon n° {{ index }}"/>
         </a>
         <p class="text-center">{{ index }}</p>
       {% endif %}

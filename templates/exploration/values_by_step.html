@@ -13,7 +13,7 @@
         <input type="checkbox" class="form-check-input" id="test-check-1">
         <label class="form-check-label" for="test-check-1">Test</label>
       </div>  
-      <label class="d-none" for="select-1">Attribut</label>
+      <label for="select-1">Attribut:</label>
       <select class="custom-select ml-2" id="select-1">
         <option value="width">Largeur</option>
         <option value="height">Hauteur</option>
@@ -52,6 +52,20 @@
       searchParam.set('test', testCheckBox1.checked.toString())
       searchParam.set('x', select1.value)
       graph.src="/values-by-step?" + searchParam.toString()
+      let steps = []
+      if (trainCheckBox1.checked)
+      {
+        steps.push('train')
+      }
+      if (validCheckBox1.checked)
+      {
+        steps.push('valid')
+      }
+      if (testCheckBox1.checked)
+      {
+        steps.push('test')
+      }
+      graph.setAttribute('alt', select1.options[select1.selectedIndex].innerHTML +  " pour: " + steps.join(' - '))
     }
 
     form.onsubmit = (event) => {

@@ -43,6 +43,21 @@
       searchParam.set('valid', validCheckBox3.checked.toString())
       searchParam.set('test', testCheckBox3.checked.toString())
       graph.src="/valid-boxes-by-step?" + searchParam.toString()
+      let steps = []
+      if (trainCheckBox3.checked)
+      {
+        steps.push('train')
+      }
+      if (validCheckBox3.checked)
+      {
+        steps.push('valid')
+      }
+      if (testCheckBox3.checked)
+      {
+        steps.push('test')
+      }
+      graph.setAttribute('alt', "Nombre de boîtes valides pour: " + steps.join(' - '))
+   
     }
 
     form.onsubmit = (event) => {

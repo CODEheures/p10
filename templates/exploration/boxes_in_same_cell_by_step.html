@@ -43,6 +43,20 @@
       searchParam.set('valid', validCheckBox5.checked.toString())
       searchParam.set('test', testCheckBox5.checked.toString())
       graph.src="/boxes-in-same-cell-by-step?" + searchParam.toString()
+      let steps = []
+      if (trainCheckBox5.checked)
+      {
+        steps.push('train')
+      }
+      if (validCheckBox5.checked)
+      {
+        steps.push('valid')
+      }
+      if (testCheckBox5.checked)
+      {
+        steps.push('test')
+      }
+      graph.setAttribute('alt', "Boites dans une même cellule pour: " + steps.join(' - '))
     }
 
     form.onsubmit = (event) => {
